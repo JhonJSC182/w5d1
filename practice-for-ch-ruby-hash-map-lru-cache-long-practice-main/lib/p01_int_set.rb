@@ -1,6 +1,6 @@
 class MaxIntSet
 
-  attr_writer :store
+attr_accessor :store
 
   def initialize(max)
     @max = max
@@ -13,10 +13,11 @@ class MaxIntSet
   end
 
   def remove(num)
+    @store[num] = false
   end
 
   def include?(num)
-
+    @store[num]
   end
 
   private
@@ -29,17 +30,23 @@ class MaxIntSet
 end
 
 class IntSet
+  attr_accessor :store, :num_buckets
+
   def initialize(num_buckets = 20)
     @store = Array.new(num_buckets) { Array.new }
+    @num_buckets = num_buckets
   end
 
   def insert(num)
+    @store[num % num_buckets] << num
   end
 
   def remove(num)
+    @store[num % num_buckets].delete(num)
   end
 
   def include?(num)
+    @store[num % num_buckets].include?(num)
   end
 
   private
@@ -85,3 +92,6 @@ class ResizingIntSet
     # optional but useful; return the bucket corresponding to `num`
   end
 end
+
+set = MaxIntSet.new(50)
+set.insert(1)
