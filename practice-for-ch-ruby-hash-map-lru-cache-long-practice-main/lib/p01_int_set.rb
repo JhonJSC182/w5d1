@@ -66,38 +66,49 @@ class ResizingIntSet
 
   def initialize(num_buckets = 20)
     @store = Array.new(num_buckets) { Array.new }
-    @count = 0
     @num_buckets = num_buckets
+    @count = 0
   end
 
   def insert(num)
-    if count >= num_buckets
-      @store = Array.new(num_buckets * 2) { Array.new }
+    if @count < @num_buckets && !include?(num)
       @store[num % num_buckets] << num
-      count += 1
+      @count += 1
+    else
+      resize!
     end
+    
+    
   end
 
   def remove(num)
+    if include?(num) 
+      @store[num % num_buckets].delete(num)
+      @count -= 1
+    end
+    
   end
 
   def include?(num)
-    
+    @store[num % num_buckets].include?(num)
   end
 
   private
 
-  def num_buckets
-    @store.length
-  end
+  # def num_buckets
+  # end
 
   def resize!
+    old_nums = @store.flatten
+    @num_buckets *= 2
+    @store = Array.new(@num_buckets) { Array.new }
+    old_nums.each do |ele|
+      @store[ele % @num_buckets] << ele
+    end
+
   end
 
   def [](num)
-    # optional but useful; return the bucket corresponding to `num`
+    # optional but useful; return the bucket corresponding to `num`]
   end
 end
-
-set = MaxIntSet.new(50)
-set.insert(1)
